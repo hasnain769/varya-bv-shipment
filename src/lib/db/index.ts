@@ -1,12 +1,22 @@
-import {neon , neonConfig} from '@neondatabase/serverless'
-import { drizzle } from 'drizzle-orm/neon-http'
+import { neon, neonConfig } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
+import { config } from 'dotenv';
 
-//neonConfig.fetchConnectionCache = true
-// if(!process.env.DATABASE_URL){
-//     throw new Error(" Database URL not found")
-// }
+// Load environment variables from .env file
+config();
 
-const sql = neon("postgresql://syedhasnain769:ksdEp3uAx9Oe@ep-weathered-forest-a509tbmy.us-east-2.aws.neon.tech/vareyaship?sslmode=require") 
+// Enable connection caching
+//neonConfig.fetchConnectionCache = true;
 
-export const db =drizzle(sql)
+// Check if DRIZZLE_DATABASE_URL environment variable is set
+const databaseUrl = process.env.NEXT_PUBLIC_DATABASE_URL ;
+console.log(databaseUrl)
+if (!databaseUrl) {
+  throw new Error('Database connection string is missing. Please set DRIZZLE_DATABASE_URL environment variable.');
+}
 
+// Establish database connection
+const sql = neon(databaseUrl);
+
+// Create database instance using drizzle
+export const db = drizzle(sql);
