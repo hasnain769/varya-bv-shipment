@@ -11,7 +11,7 @@ export default {
     schema : "./src/lib/db/schema.ts",
     out: "./drizzle",
     dbCredentials :{
-        connectionString :process.env.DATABASE_URL as string,
+        connectionString :process.env.NEXT_PUBLIC_DATABASE_URL as string,
     },
 
 } satisfies Config

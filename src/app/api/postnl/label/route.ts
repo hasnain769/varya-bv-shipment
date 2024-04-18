@@ -4,7 +4,7 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 import { mapShipHeroToPostNL } from '@/app/utils/postnl/dataMaper';
 import { ShipHeroWebhook } from '@/app/utils/types';
 
-import { Data } from '@/app/utils/postnl/postnltypes';
+import { postNLData } from '@/app/utils/postnl/postnltypes';
 import { logger } from '@/utils/logger';
 
 config();
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       logger.info(barCode);
 
       const postNLApiKey = process.env.POSTNL_API_KEY as string;
-      const postNLBody : Data = await mapShipHeroToPostNL(shipmentData, barCode, postNLProductCode, 
+      const postNLBody : postNLData = await mapShipHeroToPostNL(shipmentData, barCode, postNLProductCode, 
                                                           postNLCustomerCode, postNLCustomerNumber);
       logger.info(JSON.stringify(postNLBody))
       try {

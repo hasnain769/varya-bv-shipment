@@ -1,5 +1,5 @@
 import { ShipHeroWebhook } from "../types";
-import { Data } from "./postnltypes";
+import {  postNLData } from "./postnltypes";
 import { config } from 'dotenv';
 import axios from "axios";
 
@@ -46,7 +46,7 @@ export async function mapShipHeroToPostNL(shipHeroData: ShipHeroWebhook, barCode
     //     Zipcode: shipHeroData.from_address.zip
     // },
 
-    const postNLData: Data = {
+    const postNLData: postNLData = {
         Customer: {
             Address: {
                 AddressType: "02",

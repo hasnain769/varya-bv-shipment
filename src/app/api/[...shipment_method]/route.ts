@@ -71,6 +71,9 @@ export async function POST(req: NextRequest) {
     } else if(postNL.includes(shipmentData.shipping_method)){
       Carrier="PostNL"
     }
+    else {
+      Carrier ="dhl"
+    }
 
     logger.info(Carrier);
     let labelContent = undefined;
@@ -84,6 +87,11 @@ export async function POST(req: NextRequest) {
         // req.log.info('Label Generated successfully for order :', { order: shipmentData });
 
       }
+
+    }
+    if (Carrier ==="dhl") {
+      const data =  await axios.post("http://localhost:3000/api/dhl" ,  shipmentData)
+      
 
     } else if (Carrier ==="Asendia") {
       const asendiaResponse = await axios.post(asendiaCallingapiProd, shipmentData)

@@ -156,7 +156,7 @@ type AddressType = {
     Printertype: string;
   };
   
- export type Data = {
+ export type postNLData = {
     Shipments: ShipmentsType[];
     Message: MessageType;
     Customer: Customer;
