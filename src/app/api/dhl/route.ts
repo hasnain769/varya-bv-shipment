@@ -15,27 +15,29 @@ export async function POST(req: NextRequest) {
     if (req.method === 'POST') {
       const shipmentData: ShipHeroWebhook = await req.json();
       logger.info(JSON.stringify(shipmentData));
-      
+      const {accessToken} = await authenticateApiKey()
+      console.log(accessToken)
+    
       
 
 
-      const dhlrequestBody : dhlShipment = await dataMapToDhl(shipmentData );
+      const dhlrequestBody : dhlShipment =  dataMapToDhl(shipmentData );
       console.log(dhlrequestBody)
-    //   logger.info(JSON.stringify(dhlrequestBody))
-    //   try {
-    //     const postNLApiResponse = await callPostNLApi(postNLApiKey, JSON.stringify(postNLBody));
+       logger.info(JSON.stringify(dhlrequestBody))
+      try {
+        const postNLApiResponse = await callPostNLApi(postNLApiKey, JSON.stringify(postNLBody));
         
-    //     logger.info(JSON.stringify(postNLApiResponse))
-    //     return new NextResponse(JSON.stringify(postNLApiResponse), {
-    //       status: 200,
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //     });
-    //   } catch (error) {
+        logger.info(JSON.stringify(postNLApiResponse))
+        return new NextResponse(JSON.stringify(postNLApiResponse), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      } catch (error) {
         
-    //     return handlePostNLError(error);
-    //   }
+        return handlePostNLError(error);
+      }
     } else {
       return new NextResponse('Method Not Allowed', { status: 405 });
     }
@@ -45,35 +47,23 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// async function getBarcode(customer_code: string, customer_number: string) {
-//   const apiKey = process.env.POSTNL_API_KEY;
+async function authenticateApiKey() {
+  const url = 'https://api-gw.dhlparcel.nl/authenticate/api-key';
 
-//   try {
-//       const response = await axios.get(
-//           'https://api.postnl.nl/shipment/v1_1/barcode',
-//           {
-//               params: {
-//                   CustomerNumber: customer_number,
-//                   CustomerCode: customer_code,
-//                   Type: 'LA',
-//                   Range: "NL",
-//                   Serie: '00000000-99999999',
-//               },
+  const data = {
+    userId: 'd1e5f062-4c44-4c49-8d6e-d7afc5d98575',
+    key: '939b8696-2a0c-4e7c-916e-bf3eb808f653'
+  };
 
-//               headers: {
-//                   'Content-Type': 'application/json',
-//                   'apikey': apiKey,
-//               },
-//           }
-//       );
-
-//       return response.data.Barcode;
-//   } catch (error) {
-//       logger.error('Error fetching barcode:', error);
-//       // Handle errors here
-//       throw error;
-//   }
-// }
+  try {
+    const response = await axios.post(url, data);
+    console.log('Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}
 
 // async function callPostNLApi(apiKey: string, requestPayload: any ) {
  

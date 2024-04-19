@@ -37,7 +37,7 @@ export function dataMapToDhl(data: ShipHeroWebhook) {
       address: {
         countryCode: data.from_address.country,
         postalCode: data.from_address.zip,
-        city: data.from_address.city,
+        city: data.from_address.city || "any",
         street: `${data.from_address.address_1} ${data.from_address.address_2}`.trim(),
         additionalAddressLine: "",
         number: "",
@@ -90,14 +90,14 @@ export function dataMapToDhl(data: ShipHeroWebhook) {
       invoiceType: "Commercial",
       exportType: "Permanent",
       exportReason: "Gift",
-      // customsGoods: data.packages.map(pkg => ({
-      //   code: pkg.line_items[0].sku,
-      //   description: pkg.line_items[0].customs_description,
-      //   origin: "NL", // Assuming it's always NL
-      //   quantity: pkg.line_items[0].quantity,
-      //   value: parseFloat(pkg.line_items[0].customs_value),
-      //   weight: pkg.line_items[0].weight 
-      // })),
+      customsGoods: data.packages.map((pkg : any) => ({
+        code: pkg.line_items[0].sku,
+        description: pkg.line_items[0].customs_description,
+        origin: "NL", // Assuming it's always NL
+        quantity: pkg.line_items[0].quantity,
+        value: parseFloat(pkg.line_items[0].customs_value),
+        weight: pkg.line_items[0].weight 
+      })),
       incoTerms: "", // This value is not provided in the given data
       incoTermsCity: "", // This value is not provided in the given data
       senderInboundVatNumber: "NL987654321",
@@ -146,6 +146,6 @@ export function dataMapToDhl(data: ShipHeroWebhook) {
     }))
     
   };
-  console.log(shipment)
+  console.log(JSON.stringify(shipment))
   return shipment ;
 }

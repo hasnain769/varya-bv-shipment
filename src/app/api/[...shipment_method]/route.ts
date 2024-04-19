@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
     else {
       Carrier ="dhl"
     }
-
+    
     logger.info(Carrier);
     let labelContent = undefined;
     if (Carrier ==="PostNL") {
