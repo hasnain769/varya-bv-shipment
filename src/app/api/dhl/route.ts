@@ -11,6 +11,7 @@ import { dataMapToDhl } from '@/app/utils/dhl/mapperFunction';
 config();
 
 export async function POST(req: NextRequest) {
+  const shipmentUrl = "https://api-gw.dhlparcel.nl/shipments"
   try {
     if (req.method === 'POST') {
       const shipmentData: ShipHeroWebhook = await req.json();
@@ -25,18 +26,18 @@ export async function POST(req: NextRequest) {
       console.log(dhlrequestBody)
        logger.info(JSON.stringify(dhlrequestBody))
       try {
-        const postNLApiResponse = await callPostNLApi(postNLApiKey, JSON.stringify(postNLBody));
-        
-        logger.info(JSON.stringify(postNLApiResponse))
-        return new NextResponse(JSON.stringify(postNLApiResponse), {
+        const dhlResponse  = await callDhlApi(accessToken, JSON.stringify(dhlrequestBody));
+        console.log(dhlResponse)
+        logger.info(JSON.stringify(dhlResponse))
+        return new NextResponse(JSON.stringify(dhlResponse), {
           status: 200,
           headers: {
             'Content-Type': 'application/json',
           },
         });
       } catch (error) {
-        
-        return handlePostNLError(error);
+        console.log("error")
+        //return handlePostNLError(error);
       }
     } else {
       return new NextResponse('Method Not Allowed', { status: 405 });
@@ -65,25 +66,25 @@ async function authenticateApiKey() {
   }
 }
 
-// async function callPostNLApi(apiKey: string, requestPayload: any ) {
- 
-//   try {
-//     const headers = {
-//       'Content-Type': 'application/json',
-//       'apikey': apiKey,
-//     };
+async function callDhlApi(accessToken: string, requestPayload: any ) {
+  const shipmentUrl = "https://api-gw.dhlparcel.nl/shipments"
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      'api_key': accessToken,
+    };
 
-//     const response: AxiosResponse<any> = await axios.post('https://api.postnl.nl/shipment/v2_2/label', requestPayload, {
-//       headers,
-//       timeout: 10000,
-//     });
-
-//     return response.data;
-//   } catch (error) {
-    
-//     throw error;
-//   }
-// }
+    const response: AxiosResponse<any> = await axios.post(shipmentUrl, requestPayload, {
+      headers,
+      timeout: 10000,
+    });
+    console.log(response)
+    return response.data;
+  } catch (error) {
+    console.log("error")
+    throw error;
+  }
+}
 
 
 
