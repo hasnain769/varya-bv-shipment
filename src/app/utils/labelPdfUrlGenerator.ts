@@ -1,4 +1,4 @@
-limport { config } from 'dotenv';
+import { config } from 'dotenv';
 
 import { FormData, Blob } from 'formdata-node'
 
